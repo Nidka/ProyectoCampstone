@@ -1,0 +1,95 @@
+<div class="bc">
+  <span>Gastos</span>
+  <span class="bc-sep">/</span>
+  <strong>Registrar gasto adicional</strong>
+</div>
+
+<div class="page-hd">
+  <div>
+    <h1>Registrar gasto adicional</h1>
+  </div>
+</div>
+
+<div class="split">
+  <div class="widget">
+    <div class="widget-body">
+      <form class="form" (ngSubmit)="save()">
+        <div class="field" [class.has-err]="viajeError">
+          <label for="gf-viaje">Viaje <span class="req">*</span></label>
+          <select id="gf-viaje" name="viaje" [(ngModel)]="viajeId">
+            <option value="" disabled selected>Selecciona el viaje</option>
+            @for (v of viajes; track $index) {
+              <option [value]="v['id_viaje']">Viaje #{{ v['id_viaje'] }}</option>
+            }
+          </select>
+          @if (viajeError) {
+            <div class="ferr" style="display:block">{{ viajeError }}</div>
+          }
+        </div>
+
+        <div class="field" [class.has-err]="clienteError">
+          <label for="gf-cliente">Cliente <span class="req">*</span></label>
+          <select id="gf-cliente" name="cliente" [(ngModel)]="clienteId">
+            <option value="" disabled selected>Selecciona el cliente responsable de pago</option>
+            @for (c of clientes; track $index) {
+              <option [value]="c['id_cliente']">{{ c['razon_social'] }}</option>
+            }
+          </select>
+          @if (clienteError) {
+            <div class="ferr" style="display:block">{{ clienteError }}</div>
+          }
+        </div>
+
+        <div class="frow">
+          <div class="field" [class.has-err]="montoError">
+            <label for="gf-monto">Monto (S/) <span class="req">*</span></label>
+            <input id="gf-monto" name="monto" type="number" min="0.01" step="0.01" [(ngModel)]="monto" placeholder="0.00" />
+            @if (montoError) {
+              <div class="ferr" style="display:block">{{ montoError }}</div>
+            }
+          </div>
+          <div class="field" [class.has-err]="fechaError">
+            <label for="gf-fecha">Fecha del gasto <span class="req">*</span></label>
+            <input id="gf-fecha" name="fecha" type="date" [(ngModel)]="fecha" />
+            @if (fechaError) {
+              <div class="ferr" style="display:block">{{ fechaError }}</div>
+            }
+          </div>
+        </div>
+
+        <div class="f-acts">
+          <button class="btn btn-y" type="submit" [disabled]="saving()">
+            {{ saving() ? 'Registrando…' : 'Registrar gasto' }}
+          </button>
+          <button class="btn btn-ghost" type="button" (click)="clearForm()">Cancelar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="widget">
+    <div class="widget-hd">
+      <div>
+        <h2>Flujo del gasto</h2>
+      </div>
+    </div>
+    <div class="widget-body" style="display:flex;flex-direction:column;gap:10px">
+      <div class="target-row">
+        <span class="lbl" [class]="estadoClass.Registrado">{{ estadoLabel.Registrado }}</span>
+        <span style="color:var(--t4)">→ al registrar el gasto</span>
+      </div>
+      <div class="target-row">
+        <span class="lbl" [class]="estadoClass.Pagado">{{ estadoLabel.Pagado }}</span>
+        <span style="color:var(--t4)">→ al adjuntar un comprobante</span>
+      </div>
+      <div class="target-row">
+        <span class="lbl" [class]="estadoClass.Sustentado">{{ estadoLabel.Sustentado }}</span>
+        <span style="color:var(--t4)">→ al aprobar el comprobante</span>
+      </div>
+      <div class="target-row">
+        <span class="lbl" [class]="estadoClass.Registrado">{{ estadoLabel.Registrado }}</span>
+        <span style="color:var(--t4)">← si el comprobante se rechaza</span>
+      </div>
+    </div>
+  </div>
+</div>
